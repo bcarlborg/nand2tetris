@@ -1,0 +1,13 @@
+
+CHIP Splitter16To8 {
+    IN
+        in[16];  // 16-bit inputs
+
+    OUT
+        out07[8],
+        out815[8];
+
+    PARTS:
+        Forward8(in=in[0..7], out=out07);
+        Forward8(in=in[8..15], out=out815);
+}

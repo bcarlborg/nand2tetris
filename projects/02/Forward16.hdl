@@ -1,0 +1,12 @@
+
+CHIP Forward16 {
+    IN
+        in[16];  // 16-bit inputs
+
+    OUT
+        out[16];
+
+    PARTS:
+        Not16(in=in, out=notIn);
+        Not16(in=notIn, out=out);
+}

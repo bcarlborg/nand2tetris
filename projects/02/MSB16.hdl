@@ -1,0 +1,11 @@
+
+CHIP MSB16 {
+    IN
+        in[16];
+
+    OUT
+        out;
+
+    PARTS:
+        Forward(in=in[15], out=out);
+}

@@ -1,0 +1,11 @@
+
+CHIP Forward {
+    IN
+        in;
+
+    OUT
+        out;
+
+    PARTS:
+        And(a=in, b=in, out=out);
+}
