@@ -40,4 +40,92 @@ CHIP CPU {
 
     PARTS:
     // Put your code here:
+
+    Not(in=instruction[15], out=isAinstruction);
+    Not(in=isAinstruction, out=isCinstruction);
+
+    // Nand(a=alung, b=aluzr, out=alugt);
+    Not(in=alung, out=nalung);
+    Not(in=aluzr, out=naluzr);
+    And(a=naluzr, b=nalung, out=alugt);
+    Xor(a=instruction[0], b=alugt, out=notJump0);
+    Not(in=notJump0, out=jump0);
+
+    Xor(a=instruction[1], b=aluzr, out=notJump1);
+    Not(in=notJump1, out=jump1);
+
+    Xor(a=instruction[2], b=alung, out=notJump2);
+    Not(in=notJump2, out=jump2);
+
+    And(a=jump0, b=jump1, out=jump01);
+    And(a=jump01, b=jump2, out=perfectMatch);
+
+    Or(a=jump2, b=jump1, out=LTEJ);
+    Or(a=jump0, b=jump1, out=GTEJ);
+
+    Mux(a=LTEJ, b=GTEJ, sel=instruction[0], out=LOGTE);
+
+    FullAdder(a=instruction[0], b=instruction[1], c=instruction[2], sum=sum, carry=carry);
+    Not(in=sum, out=Nsum);
+    And(a=Nsum, b=carry, out=twoNum);
+
+    Mux(a=perfectMatch, b=LOGTE, sel=twoNum, out=oneOrTwo);
+
+    And(a=instruction[0], b=instruction[1], out=i01);
+    And(a=instruction[2], b=i01, out=allThree);
+
+    Or(a=oneOrTwo, b=allThree, out=iJump);
+    And(a=isCinstruction, b=iJump, out=toJump);
+
+    And(a=isCinstruction, b=instruction[3], out=loadM);
+    And(a=isCinstruction, b=instruction[4], out=loadD);
+    Or(a=isAinstruction, b=instruction[5], out=loadA);
+
+    // alu input = 6..11
+    // a = 12
+    // alu x = d register
+    // alu y = A if a = 0, and M if a = 1
+
+  
+    // A register 
+    Mux16(a=aluOut, b=instruction, sel=isAinstruction, out=aRegAddr);
+    ARegister(in=aRegAddr, load=loadA, out[0..14]=addressM, out=AReg);
+
+    // y input to alu
+    Mux16(a=AReg, b=inM, sel=instruction[12], out=aluYinput); 
+
+
+    // D register
+    DRegister(in=aluOut, load=loadD, out=DReg);
+
+    Not(in=instruction[11], out=not11);
+    Not(in=not11, out=zxIn);
+
+    Not(in=instruction[10], out=not10);
+    Not(in=not10, out=nxIn);
+
+    Not(in=instruction[9], out=not9);
+    Not(in=not9, out=zyIn);
+
+    Not(in=instruction[8], out=not8);
+    Not(in=not8, out=nyIn);
+
+    Not(in=instruction[7], out=not7);
+    Not(in=not7, out=fIn);
+
+    Not(in=instruction[6], out=not6);
+    Not(in=not6, out=noIn);
+
+
+    ALU(x=DReg, y=aluYinput, zx=zxIn, nx=nxIn, zy=zyIn, ny=nyIn, f=fIn, no=noIn, zr=aluzr, ng=alung, out=aluOut, out=outM);
+
+    // write mem?
+    Not(in=loadM, out=notLoadM);
+    Not(in=notLoadM, out=writeM);
+
+    PC(in=AReg, reset=reset, load=toJump, inc=true, out[0..14]=pc);
+
+
+
+    
 }
