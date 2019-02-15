@@ -11,10 +11,7 @@ export function clean_file(file_path) {
     },
     (err) => {throw err}
   );
-
 }
-
-
 
 function get_file_text(file_path) {
   return new Promise(
@@ -26,8 +23,6 @@ function get_file_text(file_path) {
     }
   );
 }
-
-
 function reduce_to_simple_code(file_text) {
   let code_array = file_text.split("\n");
   code_array = clear_complete_line_comments(code_array);
@@ -38,12 +33,12 @@ function reduce_to_simple_code(file_text) {
 }
 
 function clear_complete_line_comments(code_array) {
-  const comments_removed = code_array.filter((line) => !((/^\/\/.*$/).test(line)));
+  const comments_removed = code_array.filter((line) => !(/^\/\//).test(line));
   return comments_removed;
 }
 
 function clear_in_line_comments(code_array) {
-  const r_inline_comment = /\/\/.*$/
+  const r_inline_comment = /\/\/.*\s*.*$/
   return code_array.map((line) => line.replace(r_inline_comment, ''));
 }
 

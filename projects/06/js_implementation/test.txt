@@ -6,7 +6,9 @@ D=A
 0;JMP
 (RET_         ADDRE     SS_CALL328)
 
+@imabutmuncher
 
+@butbutbut
 
 
 @69 // I am an inline comment
@@ -47,3 +49,4 @@ A=A-1
 M=D
 @2
 D=A
+@RET_ADDRESS_CALL328
